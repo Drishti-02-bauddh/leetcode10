@@ -1,0 +1,39 @@
+// 874. Walking Robot Simulation//
+
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int robotSim(int[] commands, int[][] obstacles) {
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {1, 0, -1, 0};
+        int x = 0, y = 0, dir = 0;
+        int maxDistSq = 0;
+
+        Set<String> obstacleSet = new HashSet<>();
+        for (int[] obstacle : obstacles) {
+            obstacleSet.add(obstacle[0] + "," + obstacle[1]);
+        }
+
+        for (int cmd : commands) {
+            if (cmd == -2) { // Turn left
+                dir = (dir + 3) % 4;
+            } else if (cmd == -1) { // Turn right
+                dir = (dir + 1) % 4;
+            } else { // Move forward
+                for (int k = 0; k < cmd; k++) {
+                    int nextX = x + dx[dir];
+                    int nextY = y + dy[dir];
+                    if (obstacleSet.contains(nextX + "," + nextY)) {
+                        break; // Stop if obstacle hit
+                    }
+                    x = nextX;
+                    y = nextY;
+                    maxDistSq = Math.max(maxDistSq, x * x + y * y);
+                }
+            }
+        }
+
+        return maxDistSq;
+    }
+}
